@@ -1,5 +1,3 @@
-from byteTranslate import byteTranslator
-
 class FileGen:
     @classmethod
     def textFile(cls, nomeFile, contenuto):
