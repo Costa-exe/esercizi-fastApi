@@ -1,7 +1,7 @@
 class FileGen:
     @classmethod
     def textFile(cls, nomeFile, contenuto):
-        with open(f"{nomeFile}.txt", 'wb') as f:
+        with open(f"{nomeFile}.pdf", 'wb') as f:
             f.write(contenuto)
         
-        return f"{nomeFile}.txt"
+        return f"{nomeFile}.pdf"
