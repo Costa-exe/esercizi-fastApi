@@ -8,3 +8,14 @@ async def zipBytes(stringa : str):
     with open(Services.zip(Services.FileGenerate('fileDiTesto', Services.bytes(stringa))), 'rb') as file_data:
         bytes_content = file_data.read()
         return bytes_content.hex()
+
+@app.get("/validation")
+async def validazione(CF : str, Email : str, numTel : int):
+    arrayresult = []
+    arrayresult.append(Services.validResult("CF", CF))
+    arrayresult.append(Services.validResult("email", Email))
+    arrayresult.append(Services.validResult("numTel", numTel))
+
+    if "KO" in arrayresult:
+        return "KO"
+    return "OK"

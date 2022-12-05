@@ -1,6 +1,7 @@
 from dto.byteTranslate import byteTranslator
 from dto.fileGenerator import FileGen
 from dto.ZipService import Zipper
+from dto.validation import validator
 
 class Services:
 
@@ -15,3 +16,7 @@ class Services:
     @classmethod
     def zip(cls, file):
         return Zipper.ZipNewFile(file)
+
+    @classmethod
+    def validResult(cls, campo, valore):
+        return validator.validate(campo, valore)
