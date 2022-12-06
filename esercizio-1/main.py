@@ -10,12 +10,13 @@ async def zipBytes(stringa : str):
         return bytes_content.hex()
 
 @app.get("/validation")
-async def validazione(CF : str, Email : str, numTel : int):
+async def validazione(id : int, CF : str, Email : str, numTel : int):
     arrayresult = []
+    arrayresult.append(Services.validResult("IdAnagrafica", id))
     arrayresult.append(Services.validResult("CF", CF))
     arrayresult.append(Services.validResult("email", Email))
     arrayresult.append(Services.validResult("numTel", numTel))
 
     if "KO" in arrayresult:
         return "KO"
-    return "OK"
+    return arrayresult[0]
