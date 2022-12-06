@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from dataServices.service import Services
+import random
 
 app = FastAPI()
 
@@ -9,7 +10,7 @@ async def zipBytes(stringa : str):
         bytes_content = file_data.read()
         return bytes_content.hex()
 
-@app.get("/validation")
+@app.get("/insertClient")
 async def validazione(id : int, CF : str, Email : str, numTel : int):
     arrayresult = {}
     arrayresult['ID'] = Services.validResult("IdAnagrafica", id)
@@ -17,8 +18,14 @@ async def validazione(id : int, CF : str, Email : str, numTel : int):
     arrayresult['E-mail'] = Services.validResult("email", Email)
     arrayresult['Numero di Telefono'] = Services.validResult("numTel", numTel)
 
+    idsap = random.randint(10000000000, 99999999999)
+
     for x, y in arrayresult.items():
         if y == "Not Valid":
-            return f"formato di '{x}' non valido"
+            return {"Validation" : "KO",
+                    "Error" : f"formato di '{x}' non valido",
+                    "ID-SAP": None}
     
-    return arrayresult
+    return {"Validation" : "OK",
+            "Error" : "No Errors",
+            "ID-SAP": idsap}
