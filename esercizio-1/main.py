@@ -11,12 +11,14 @@ async def zipBytes(stringa : str):
 
 @app.get("/validation")
 async def validazione(id : int, CF : str, Email : str, numTel : int):
-    arrayresult = []
-    arrayresult.append(Services.validResult("IdAnagrafica", id))
-    arrayresult.append(Services.validResult("CF", CF))
-    arrayresult.append(Services.validResult("email", Email))
-    arrayresult.append(Services.validResult("numTel", numTel))
+    arrayresult = {}
+    arrayresult['ID'] = Services.validResult("IdAnagrafica", id)
+    arrayresult['CF'] = Services.validResult("CF", CF)
+    arrayresult['E-mail'] = Services.validResult("email", Email)
+    arrayresult['Numero di Telefono'] = Services.validResult("numTel", numTel)
 
-    if "KO" in arrayresult:
-        return "KO"
-    return arrayresult[0]
+    for x, y in arrayresult.items():
+        if y == "Not Valid":
+            return f"formato di '{x}' non valido"
+    
+    return arrayresult
