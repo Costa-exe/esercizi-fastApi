@@ -1,6 +1,14 @@
 from fastapi import FastAPI
 from dataServices.service import Services
 import random
+from pydantic import BaseModel
+
+
+class Item(BaseModel):
+    ID: int
+    CF: str
+    Email: str
+    NumTelefono: int
 
 app = FastAPI()
 
@@ -10,17 +18,17 @@ async def zipBytes(stringa : str):
         bytes_content = file_data.read()
         return bytes_content.hex()
 
-@app.get("/insertClient")
-async def validazione(id : int, CF : str, Email : str, numTel : int):
-    arrayresult = {}
-    arrayresult['ID'] = Services.validResult("IdAnagrafica", id)
-    arrayresult['CF'] = Services.validResult("CF", CF)
-    arrayresult['E-mail'] = Services.validResult("email", Email)
-    arrayresult['Numero di Telefono'] = Services.validResult("numTel", numTel)
+@app.post("/insertClient")
+async def validazione(item : Item):
+    result = {}
+    result['ID'] = Services.validResult("IdAnagrafica", item.ID)
+    result['CF'] = Services.validResult("CF", item.CF)
+    result['E-mail'] = Services.validResult("email", item.Email)
+    result['Numero di Telefono'] = Services.validResult("numTel", item.NumTelefono)
 
     idsap = random.randint(10000000000, 99999999999)
 
-    for x, y in arrayresult.items():
+    for x, y in result.items():
         if y == "Not Valid":
             return {"Validation" : "KO",
                     "Error" : f"formato di '{x}' non valido",
