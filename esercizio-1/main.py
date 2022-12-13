@@ -1,5 +1,6 @@
-from fastapi import FastAPI
-from dataServices.service import Services
+import os
+from zipfile import ZipFile
+from fastapi import FastAPI, UploadFile
 import random
 from pydantic import BaseModel
 
@@ -12,11 +13,25 @@ class Item(BaseModel):
 
 app = FastAPI()
 
-@app.get("/zip")
-async def zipBytes(stringa : str):
-    with open(Services.zip(Services.FileGenerate('fileDiTesto', Services.bytes(stringa))), 'rb') as file_data:
-        bytes_content = file_data.read()
-        return bytes_content.hex()
+@app.post("/zipit/")
+async def create_upload_file(file: UploadFile):
+
+  filename = file.filename[:file.filename.__len__()-4:1]
+  PDFNAME = f'{filename}.pdf'
+  ZIPNAME = f'{filename}.zip'
+  _pdf = open(PDFNAME, "wb")
+  _pdf.write(file.file.read());
+  _pdf.close()
+  
+  with ZipFile(ZIPNAME, 'w') as zip:
+    zip.write(os.path.basename(PDFNAME))
+  
+  os.remove(PDFNAME)
+  zipped = open(ZIPNAME, 'rb')
+  b_array = zipped.read()
+  zipped.close()
+  os.remove(ZIPNAME)
+  return {'zipped' : str(b_array)}
 
 @app.post("/insertClient")
 async def validazione(item : Item):
