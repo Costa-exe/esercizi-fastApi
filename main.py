@@ -1,6 +1,8 @@
 import os
+from dataServices.service import Services
 from zipfile import ZipFile
 from fastapi import FastAPI, UploadFile
+from fastapi.responses import FileResponse
 import random
 from pydantic import BaseModel
 
@@ -27,11 +29,10 @@ async def create_upload_file(file: UploadFile):
     zip.write(os.path.basename(PDFNAME))
   
   os.remove(PDFNAME)
-  zipped = open(ZIPNAME, 'rb')
-  b_array = zipped.read()
-  zipped.close()
-  os.remove(ZIPNAME)
-  return {'zipped' : str(b_array)}
+  
+  response = FileResponse(os.path.basename(ZIPNAME))
+  # os.remove(ZIPNAME)
+  return response
 
 @app.post("/insertClient")
 async def validazione(item : Item):
